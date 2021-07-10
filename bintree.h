@@ -32,5 +32,11 @@ node *insert(binTree *, int, const char *);
 int treeDepth(node *);
 
 // TODO: Rotationsprototypen
+node * rotateLL(node *start);
+node * rotateRL(node *start);
+node * rotateRR(node *start);
+node * rotateLR(node *start);
+int getBalance(node *start);
+node * balanceNode(node *start);
 
 #endif /* bintree_h */
