@@ -82,17 +82,6 @@ int getBalance(node *start){
 
     return balance;
 }
-/*int getBalance(node *start){
-    if(start->left && start->right){
-    if (start->left->key < start->right->key)
-          return start->right->key+1;
-    else return  start->left->key+1;
-    }else if(start->left && start->right == NULL){
-          return start->left->key+1;
-    }else if(start->left ==NULL && start->right){
-          return start->right->key+1;
-    }return 0;
-}*/
 
 // TODO: Implementierung Rotationen
 int getKey(node *start){
