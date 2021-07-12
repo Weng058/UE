@@ -13,15 +13,15 @@
 #include <stdlib.h>
 
 typedef struct node_ {
-    int key;
+    int key;//Balancefaktor?? 高度差（平衡因子）
     char *data;
     struct node_ *left;
     struct node_ *right;
 } node;
 
 typedef struct binTree_ {
-    int size;
-    node *root;
+    int size;//=Height (Wurzel einens Binary Search Tree)
+    node *root;//私有資料結構
 } binTree;
 
 // Funktionsprototypen
@@ -32,11 +32,13 @@ node *insert(binTree *, int, const char *);
 int treeDepth(node *);
 
 // TODO: Rotationsprototypen
-node * rotateLL(node *start);
-node * rotateRL(node *start);
-node * rotateRR(node *start);
-node * rotateLR(node *start);
 int getBalance(node *start);
-node * balanceNode(node *start);
+node *rotateLL(node *start);//left child node of left child tree(left-left)
+node *rotateRL(node *start);
+node *rotateRR(node *start);
+node *rotateLR(node *start);
+int getKey(node* start);
+node * deleteNode(node *start, int size);
+void balanceTree(binTree *tree);
 
 #endif /* bintree_h */

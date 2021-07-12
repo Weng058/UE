@@ -3,12 +3,15 @@
 //  AVL_Tree
 //
 //  Created by Michael Strommer on 02.07.21.
-//
 
+/** https://webis.de/downloads/lecturenotes/algorithms-and-datastructures/unit-de-search-trees.pdf */
+
+
+#include <dciman.h>
 #include "bintree.h"
 
 
-
+//Link-basierter Binärbaum
 binTree *t_init(){
     binTree *tmp = (binTree *)malloc(sizeof(binTree));
     tmp->root = NULL;
@@ -19,7 +22,7 @@ binTree *t_init(){
 // TODO: double pointer einführen oder über return Werte lösen
 node *insertNode(node *start, int key, const char *data){
     node *newNode;
-    if (start == NULL) { /* 是否是根節點 */
+    if (start == NULL) { /* whether the root node or not */
         newNode = (node *) malloc(sizeof(node));
         if (newNode != NULL) {
             newNode->data = (char*) malloc(strlen(data)+1);
@@ -27,16 +30,16 @@ node *insertNode(node *start, int key, const char *data){
             newNode->key = key;
             newNode->right = newNode->left = NULL;
         }
-        return newNode; /* 傳回新節點位置 */
-    }/* 左子樹 */
+        return newNode; /* allocation the new node */
+    }/* left child tree */
     if (key < start->key) {
         newNode = insertNode(start->left, key, data);
         if (start->left == NULL)
             start->left = newNode;
-    } else { /* 右子樹 */
+    } else {
         newNode = insertNode(start->right, key, data);
         if (start->right == NULL)
-            start->right = newNode; /* 傳回樹根指標 */
+            start->right = newNode; /* update the tree root pointer */
     }
     
     // TODO: Schritte 1-3
@@ -49,10 +52,11 @@ node *insertNode(node *start, int key, const char *data){
 
 node *insert(binTree *t, int key, const char *data){
     node *newNode;
-    newNode = insertNode(t->root, key, data);/* 樹根指標 */
+    newNode = insertNode(t->root, key, data);// Root pointer
     if (t->root == NULL) t->root = newNode;
-    if (newNode != NULL) t->size++;/* 終止條件 */
+    if (newNode != NULL) t->size++;// End operation
     return newNode;
+
 }
 
 int max(int a, int b) {
@@ -65,43 +69,64 @@ int max(int a, int b) {
 int treeDepth(node *start){
     if (start == NULL) {
         return 0;
-    }
-    else {
+    }else {
         return 1 +  max(treeDepth(start->left),
                         treeDepth(start->right));
     }
 }
+int getBalance(node *start){
+    int balance = 0;
+
+    if(start->left) balance += treeDepth(start->left);
+    if(start->right) balance -= treeDepth(start->right);
+
+    return balance;
+}
+/*int getBalance(node *start){
+    if(start->left && start->right){
+    if (start->left->key < start->right->key)
+          return start->right->key+1;
+    else return  start->left->key+1;
+    }else if(start->left && start->right == NULL){
+          return start->left->key+1;
+    }else if(start->left ==NULL && start->right){
+          return start->right->key+1;
+    }return 0;
+}*/
 
 // TODO: Implementierung Rotationen
-// rotateLL
-node * rotateLL (node *start){
-    printf("Rotating LL %d\n", start->key);
+int getKey(node *start){
+    if(start->left && start->right){
+        return start->left->key - start->right->key;
+    }else if(start->left && start->right == NULL){
+        return start->left->key;
+    }else if(start->left== NULL && start->right ){
+        return -start->right->key;
+    }
+}
+// LL-Rotation ist symmetrisch zur RR-Rotation.
+node *rotateLL (node *start){
     node *a = start;
     node *b = a->left;
-
     a->left = b->right;
     b->right = a;
 
     return b;
 }
-
-// rotateRL
-node * rotateRL (node *start){
-    printf("Rotating RL %d\n", start->key);
+//RL-Rotation ist symmetrisch zur LR-Rotation.
+node *rotateRL (node *start){
     node *a = start;
     node *b = a->right;
-    node *c = b->left;
+    node *c = b->right->left;
 
     a->right = c->left;
     b->left = c->right;
-    c->right = b;
     c->left = a;
-
+    c->right = b;
     return c;
 }
-// rotateRR
-node * rotateRR (node *start){
-    printf("Rotating RR %d\n", start->key);
+// RR-Rotation ist symmetrisch zur LL-Rotation.
+node *rotateRR (node *start){
     node *a = start;
     node *b = a->right;
 
@@ -110,17 +135,23 @@ node * rotateRR (node *start){
 
     return b;
 }
-// rotateLR
-node* rotateLR(node *start){
-    printf("Rotating LR %d\n", start->key);
-
+//LR-Rotation ist symmetrisch zur RL-Rotation.
+node *rotateLR(node *start){
     node *a = start;
     node *b = a->left;
-    node *c = b->right;
+    node *c = b->left->right;
 
     a->left = c->right;
     b->right = c->left;
-    c->left = b;
     c->right = a;
+    c->left = b;
+
     return c;
+}
+
+void balanceTree(binTree *tree) {
+    node * newRoot;
+    newRoot = deleteNode(tree->root);
+    if (newRoot != tree->root) tree->root = newRoot;
+
 }
